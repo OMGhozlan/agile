@@ -1,0 +1,45 @@
+##DB Script
+CREATE DATABASE IF NOT EXISTS kids;
+
+USE kids;
+
+CREATE TABLE IF NOT EXISTS users(
+uid MEDIUMINT not null,
+uname VARCHAR(64) not null,
+password CHAR(96) not null,
+email VARCHAR(128) not null,
+PRIMARY KEY(uid),
+UNIQUE(uname));
+
+CREATE TABLE IF NOT EXISTS games(
+gid SMALLINT not null AUTO_INCREMENT,
+gname VARCHAR(64) not null,
+description VARCHAR(256),
+PRIMARY KEY(gid));
+
+CREATE TABLE IF NOT EXISTS scores(
+uid MEDIUMINT not null,
+gid SMALLINT not null,
+score BIGINT not null,
+PRIMARY KEY(uid, gid),
+FOREIGN KEY(uid) REFERENCES users(uid) ON DELETE CASCADE,
+FOREIGN KEY(gid) REFERENCES games(gid) ON DELETE CASCADE);
+
+
+##Register
+max = SELECT MAX(uid) FROM users;
+INSERT INTO users VALUES (max+1, ?, ?(hashed), ?);
+
+##Login
+SELECT password FROM users WHERE uname = ?;
+-- hash password with the same salt and compare
+
+##Create game
+INSERT INTO games (gname) VALUES (?);
+-- or
+INSERT INTO games (gname, description) VALUES (?, ?);
+
+##score
+INSERT INTO scores VALUES (?, ?, ?);
+SELECT score FROM scores WHERE uid = ? and gid = ?;
+UPDATE scores SET score = ? WHERE uid = ? and gid = ?;

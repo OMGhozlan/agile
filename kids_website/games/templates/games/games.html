@@ -1,0 +1,12 @@
+{% extends 'Profile/base_user.html' %}
+
+{% block content %}
+    <div class="container">
+        <p>Games</p>
+        <ul>
+            {% for game in games %}
+                <li><a href={{ game.url }}>{{ game.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
